@@ -1,0 +1,1580 @@
+[
+    {
+        "useCase": "Navigate Add Request",
+        "testCases": [
+            {
+                "description": "User X sends an add request to User Y",
+                "input": {
+                    "senderId": "userX",
+                    "receiverId": "userY"
+                },
+                "expectedOutput": {
+                    "status": "success",
+                    "requestId": "req123",
+                    "message": "Add request sent to userY from userX"
+                }
+            },
+            {
+                "description": "User Y accepts the add request of User X",
+                "input": {
+                    "senderId": "userX",
+                    "receiverId": "userY"
+                },
+                "expectedOutput": {
+                    "status": "success",
+                    "connectionID": "con123",
+                    "message": "userX and userY are connected now"
+                }
+            },
+            {
+                "description": "User Y declines the add request of User X",
+                "input": {
+                    "senderId": "userX",
+                    "receiverId": "userY"
+                },
+                "expectedOutput": {
+                    "status": "success",
+                    "requestId": "req123",
+                    "message": "userY refused to be connected with userX"
+                }
+            },
+            {
+                "description": "User X removes the add request sent to User Y",
+                "input": {
+                    "senderId": "userX",
+                    "receiverId": "userY"
+                },
+                "expectedOutput": {
+                    "status": "success",
+                    "requestId": "req123",
+                    "message": "userX successfully removed the add request sent to userY"
+                }
+            },
+            {
+                "description": "User X resends an add request to User Y after removal",
+                "input": {
+                    "senderId": "userX",
+                    "receiverId": "userY"
+                },
+                "expectedOutput": {
+                    "status": "success",
+                    "requestId": "req124",
+                    "message": "Add request resent to userY from userX"
+                }
+            }
+        ]
+    },
+    {
+        "useCase": "Navigate Direct Messaging",
+        "testCases": [
+            {
+                "description": "User X clicks 'Send DM' on User Y's profile after being connected",
+                "input": {
+                    "senderId": "userX",
+                    "receiverId": "userY",
+                    "isConnected": true
+                },
+                "expectedOutput": {
+                    "status": "redirect",
+                    "target": "chatSystem",
+                    "message": "Redirecting to chatSystem of userX for DM with userY"
+                }
+            },
+            {
+                "description": "User X clicks 'Send DM' on User Y's profile without being connected",
+                "input": {
+                    "senderId": "userX",
+                    "receiverId": "userY",
+                    "isConnected": false
+                },
+                "expectedOutput": {
+                    "status": "error",
+                    "errorMessage": "Cannot send DM. userY is not connected to userX."
+                }
+            },
+            {
+                "description": "User X sends a message to User Y",
+                "input": {
+                    "senderId": "userX",
+                    "receiverId": "userY",
+                    "messageContent": "Hello Sir!"
+                },
+                "expectedOutput": {
+                    "status": "success",
+                    "messageId": "msg123",
+                    "timestamp": "2024-10-29T10:00:00Z"
+                }
+            },
+            {
+                "description": "User X sends an empty message to User Y",
+                "input": {
+                    "senderId": "userX",
+                    "receiverId": "userY",
+                    "messageContent": ""
+                },
+                "expectedOutput": {
+                    "status": "error",
+                    "errorMessage": "Message content cannot be empty."
+                }
+            },
+            {
+                "description": "User Y receives a message from User X",
+                "input": {
+                    "senderId": "userX",
+                    "receiverId": "userY",
+                    "messageId": "msg123"
+                },
+                "expectedOutput": {
+                    "status": "success",
+                    "message": {
+                        "senderId": "userX",
+                        "receiverId": "userY",
+                        "content": "Hello Sir!",
+                        "timestamp": "2024-10-29T10:00:00Z"
+                    }
+                }
+            },
+            {
+                "description": "User X views chat history with User Y",
+                "input": {
+                    "userId": "userX",
+                    "otherUserId": "userY"
+                },
+                "expectedOutput": {
+                    "status": "success",
+                    "messages": [
+                        {
+                            "messageId": "msg123",
+                            "senderId": "userX",
+                            "receiverId": "userY",
+                            "content": "Hello Sir!",
+                            "timestamp": "2024-10-29T10:00:00Z"
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "usecase": {
+            "name": "Explore Research Field via Teacher Profile",
+            "scenario": "Student interacts with teacher profile to learn about specific research fields.",
+            "actors": "Student,System",
+            "preconditions": "Teacher profiles with research details are available on the platform, and the student is logged in.",
+            "steps": [
+                "Student searches for a specific research field in the search bar.",
+                "System displays relevant teacher profiles based on the student's search.",
+                "Student selects a teacher profile.",
+                "System opens the teacher's profile, displaying the teacher’s research interests, publications, and Google Scholar,ResearchGate/Academia.edu/ORCID or LinkedIn profile link .",
+                "Student explores the teacher’s research profile and publications to learn more about the field.",
+                "Student bookmarks the profile for future reference, if desired."
+            ]
+        },
+        "testcases": [
+            {
+                "name": "Successful Profile Search and Exploration",
+                "description": "Ensure students can search and view a teacher’s profile with research details.",
+                "input": {
+                    "searchTerm": "Machine Learning in Medical Imaging"
+                },
+                "expected": {
+                    "outcome": "Relevant teacher profiles displayed; student accesses profile details and can view Google Scholar and publications.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Successful Bookmark of Teacher Profile",
+                "description": "Ensure students can bookmark a teacher’s profile for later reference.",
+                "input": {
+                    "teacherProfileId": "CampusConnect/Teacher-MMH-02357"
+                },
+                "expected": {
+                    "outcome": "Profile bookmarked successfully; student can access it later in saved profiles.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "No Relevant Teacher Profiles Found",
+                "description": "Ensure system handles cases where no profiles match the student’s search.",
+                "input": {
+                    "searchTerm": "Quantum Biology in Sports Science"
+                },
+                "expected": {
+                    "outcome": "Message displayed: 'No profiles found. Try refining your search.'",
+                    "status": "Failure"
+                }
+            },
+            {
+                "name": "Invalid Search Term Format",
+                "description": "Ensure students cannot search with invalid formats (e.g., empty search).",
+                "input": {
+                    "searchTerm": ""
+                },
+                "expected": {
+                    "outcome": "Error message displayed: 'Please enter a valid search term.'",
+                    "status": "Failure"
+                }
+            },
+            {
+                "name": "System Error When Bookmarking Teacher Profile",
+                "description": "Ensure system properly notifies students if a bookmarking attempt fails.",
+                "input": {
+                    "teacherProfileId": ""
+                },
+                "expected": {
+                    "outcome": "Error message displayed: 'Unable to bookmark profile at this time. Please try again later.'",
+                    "status": "Failure"
+                }
+            },
+            {
+                "name": "Profile Access Restricted Due to Privacy Settings",
+                "description": "Ensure students are informed if access to a teacher’s profile is restricted due to privacy settings.",
+                "input": {
+                    "teacherProfileId": "CampusConnect/Teacher-MMH-02357"
+                },
+                "expected": {
+                    "outcome": "Message displayed: 'This profile is private and cannot be accessed.'",
+                    "status": "Failure"
+                }
+            },
+            {
+                "name": "Invalid Publication Link",
+                "description": "Ensure the system notifies the student if a publication link in the teacher’s profile is broken or invalid.",
+                "input": {
+                    "teacherProfileId": "CampusConnect/Teacher-MMH-02357",
+                    "publicationLink": "http//invalidLink."
+                },
+                "expected": {
+                    "outcome": "Error message displayed: 'This publication link is broken or unavailable.'",
+                    "status": "Failure"
+                }
+            },
+            {
+                "name": "Error Accessing Publication Link",
+                "description": "Ensure the system handles errors when the Publication link is inaccessible.",
+                "input": {
+                    "teacherProfileId": "CampusConnect/Teacher-MMH-02357",
+                    "error": "Publication link access error"
+                },
+                "expected": {
+                    "outcome": "Message displayed: 'Unable to access this link. Please try again later.'",
+                    "status": "Failure"
+                }
+            }
+        ]
+    },
+    {
+        "usecase": {
+            "name": "Apply for Research Opportunity",
+            "scenario": "Student visits a teacher's profile, reviews a posted research opportunity, and applies if they meet the requirements.",
+            "actors": "Student,System",
+            "preconditions": "The teacher has posted a research opportunity with predefined requirements.",
+            "steps": [
+                "Student searches for a specific research opportunity or navigates to a teacher's profile.",
+                "Student views the research opportunity details, including predefined requirements (e.g., specific skills, experience, or qualifications).",
+                "If the student meets the requirements,apply through application portal.",
+                "System redirects the student to the application page.",
+                "Student fills in necessary information about their qualifications (e.g., education, relevant skills, experience).",
+                "Student reviews and submits the application.",
+                "System sends the application details in the research applicant database..",
+                "System confirms the application submission to the student."
+            ]
+        },
+        "testcases": [
+            {
+                "name": "Successful Application Submission",
+                "description": "Ensure that a qualified student can successfully apply for a research opportunity.",
+                "input": {
+                    "studentId": "2005121",
+                    "qualificationDetails": [
+                        "education",
+                        "skills",
+                        "experience"
+                    ]
+                },
+                "expected": {
+                    "outcome": "Application stored in research applicant database. Confirmation message displayed to the student.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Incomplete Application Form",
+                "description": "Ensure the system prompts the student to complete all necessary fields in the application form.",
+                "input": {
+                    "studentId": "2005121",
+                    "qualificationDetails": {}
+                },
+                "expected": {
+                    "outcome": "Error message displayed: 'Please fill in all required fields.'",
+                    "status": "Failure"
+                }
+            },
+            {
+                "name": "Application Confirmation Notification",
+                "description": "Ensure the system displays a confirmation message after a successful application.",
+                "input": {
+                    "studentId": "2005121",
+                    "researchOpportunityId": "R1/2024/789"
+                },
+                "expected": {
+                    "outcome": "Confirmation message displayed: 'Your application has been submitted successfully. You will be notified upon selection.'",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Application Not Stored in Database",
+                "description": "Ensure that the application is stored in the research applicant database if requirement is fulfilled.",
+                "input": {
+                    "studentId": "2005122",
+                    "researchOpportunityId": "R1/2024/789",
+                    "qualificationDetails": [
+                        "education",
+                        "skills",
+                        "experience"
+                    ]
+                },
+                "expected": {
+                    "outcome": "Application not stored in the database. Error message displayed",
+                    "status": "Failure",
+                    "databaseStatus": "No entry for studentId 2005122 in the researchOpportunityId R1/2024/789 application table."
+                }
+            }
+        ]
+    },
+    {
+        "usecase": {
+            "name": "Select Research Applicant",
+            "scenario": "Teacher reviews applications for a research position and selects qualified candidates. The selected students receive notifications about their acceptance.",
+            "actors": "Teacher, System",
+            "preconditions": "Teacher has posted a research opportunity, and students have applied for it. Applications are stored in the teacher's database for that research position.",
+            "steps": [
+                "Teacher navigates to the 'Research Applicant' option.",
+                "Teacher views a list of applicants for the specific research opportunity.",
+                "Teacher reviews each applicant's stored information (qualifications, skills, experience).",
+                "Teacher selects candidates who meet the requirements.",
+                "System updates the selection status in the database.",
+                "System sends a notification to each selected student's account."
+            ]
+        },
+        "testcases": [
+            {
+                "name": "Successful Applicant Selection",
+                "description": "Ensure that the teacher can successfully select applicants and the selected students receive notifications.",
+                "input": {
+                    "teacherId": "CampusConnect/Teacher-MMH-02357",
+                    "researchOpportunityId": "R1/2024/789",
+                    "applicants": [
+                        {
+                            "studentId": "2005121",
+                            "meetsRequirements": true
+                        },
+                        {
+                            "studentId": "2005122",
+                            "meetsRequirements": true
+                        }
+                    ]
+                },
+                "expected": {
+                    "outcome": "Selected applicants are updated in the database. Notifications sent to students 2005121 and 2005122.",
+                    "status": "Success",
+                    "databaseStatus": "Applicants 2005121 and 2005122 marked as selected for researchOpportunityId ."
+                }
+            },
+            {
+                "name": "Notification Sent After Selection",
+                "description": "Ensure that a notification is sent to each selected applicant.",
+                "input": {
+                    "teacherId": "CampusConnect/Teacher-MMH-02357",
+                    "researchOpportunityId": "R1/2024/789",
+                    "selectedApplicants": [
+                        {
+                            "studentId": "2005121",
+                            "status": "selected"
+                        }
+                    ]
+                },
+                "expected": {
+                    "outcome": "Notification sent to student 2005121: 'Congratulations, you have been selected for the research opportunity.'",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Database Access Denied for Teacher",
+                "description": "Ensure the system restricts unauthorized teachers from accessing the research applications database.",
+                "input": {
+                    "teacherId": "CampusConnect/Teacher-MMH-02357"
+                },
+                "expected": {
+                    "outcome": "Error message displayed: 'Access denied. You are not authorized to view this research opportunity's applications.'",
+                    "status": "Failure",
+                    "databaseStatus": "No access to applications in the researchOpportunityId R789."
+                }
+            },
+            {
+                "name": "Notification Not Sent Due to Network Issue",
+                "description": "Ensure the system handles notification failure and informs the teacher if notifications cannot be sent.",
+                "input": {
+                    "teacherId": "CampusConnect/Teacher-MMH-02357",
+                    "researchOpportunityId": "R1/2024/789",
+                    "selectedApplicants": [
+                        {
+                            "studentId": "2005121",
+                            "status": "selected"
+                        }
+                    ],
+                    "networkStatus": "offline"
+                },
+                "expected": {
+                    "outcome": "Error message displayed: 'Failed to send notification to selected applicant(s). Please retry later.'",
+                    "status": "Failure",
+                    "notificationStatus": "No notification sent to studentId 2005121 due to network error."
+                }
+            }
+        ]
+    },
+    {
+        "usecase": {
+            "name": "Create Post",
+            "scenario": "User creates a post on the platform.",
+            "actors": "User, System",
+            "preconditions": "User is logged in and on the newsfeed or post creation section.",
+            "steps": [
+                "User selects the option to create a new post.",
+                "System prompts user to select the type of post: Hiring, Normal, or Event.",
+                "User chooses the post type and enters relevant details.",
+                "User submits the post for creation.",
+                "System stores the post and later displays it on the newsfeed."
+            ]
+        },
+        "testcases": [
+            {
+                "name": "Create Hiring Post",
+                "description": "Ensure user can create a hiring post with research-venture-job-related details.",
+                "input": {
+                    "postType": "Hiring",
+                    "content": "We're hiring for a software engineer position!"
+                },
+                "expected": {
+                    "outcome": "Hiring post created and visible on the newsfeed.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Create Normal Post",
+                "description": "Ensure user can create a general post without job or event tags.",
+                "input": {
+                    "postType": "Normal",
+                    "content": "Check out this new feature update!"
+                },
+                "expected": {
+                    "outcome": "Normal post created and visible on the newsfeed.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Create Event Post",
+                "description": "Ensure user can create an event post with event details.",
+                "input": {
+                    "postType": "Event",
+                    "content": "Join us for our annual tech conference!"
+                },
+                "expected": {
+                    "outcome": "Event post created and visible on the newsfeed.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Post Creation Failure due to Missing Content",
+                "description": "Ensure system notifies user if content is missing during post creation.",
+                "input": {
+                    "postType": "Normal",
+                    "content": ""
+                },
+                "expected": {
+                    "outcome": "Error message displayed: 'Content cannot be empty.'",
+                    "status": "Failure"
+                }
+            }
+        ]
+    },
+    {
+        "usecase": {
+            "name": "Interact with Post",
+            "scenario": "User interacts with a post on the platform.",
+            "actors": "User, System",
+            "preconditions": "User is logged in and viewing posts on the newsfeed.",
+            "steps": [
+                "User selects a post to interact with.",
+                "System checks if the user is professional or general.",
+                "If professional, system provides options for further interaction (e.g., apply for Research Project, ventures etc.).",
+                "User interacts with the post, depending on the options available.",
+                "System stores the interaction and updates the post metrics (e.g., likes, comments)."
+            ]
+        },
+        "testcases": [
+            {
+                "name": "Like a Post",
+                "description": "Ensure user can like a post.",
+                "input": {
+                    "postId": "Post-001",
+                    "interactionType": "Like"
+                },
+                "expected": {
+                    "outcome": "Post liked successfully, like count incremented.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Comment on Post",
+                "description": "Ensure user can comment on a post.",
+                "input": {
+                    "postId": "Post-002",
+                    "interactionType": "Comment",
+                    "comment": "Looking forward to this!"
+                },
+                "expected": {
+                    "outcome": "Comment added to the post.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Interact with Professional Post",
+                "description": "Ensure professional users can interact with hiring-type posts and apply for research projects, ventures, or jobs.",
+                "input": {
+                    "postId": "Post-003",
+                    "interactionType": "Apply",
+                    "userType": "Professional",
+                    "postType": "Hiring"
+                },
+                "expected": {
+                    "outcome": "Application submitted for the research project, venture, or job.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Interaction Failure due to Network Issue",
+                "description": "Ensure system notifies user if a network error occurs during interaction.",
+                "input": {
+                    "postId": "Post-004",
+                    "interactionType": "Like",
+                    "error": "Network timeout"
+                },
+                "expected": {
+                    "outcome": "Error message displayed: 'Unable to like post due to network error. Please try again later.'",
+                    "status": "Failure"
+                }
+            }
+        ]
+    },
+    {
+        "usecase": {
+            "name": "Moderate Users and Content",
+            "scenario": "Admin moderates content on the platform to ensure it aligns with community guidelines.",
+            "actors": "Admin, System",
+            "preconditions": "Admin is logged in and has access to the moderation tools. Content requiring moderation is available on the platform.",
+            "steps": [
+                "Admin accesses the moderation dashboard.",
+                "System displays a list of content flagged for review.",
+                "Admin reviews flagged content.",
+                "Admin selects to either approve, flag, or delete the content.",
+                "If flagged or deleted, system stores moderation action and sends feedback to the content creator, if necessary."
+            ]
+        },
+        "testcases": [
+            {
+                "name": "Successful Content Moderation",
+                "description": "Ensure admin can review and moderate content successfully.",
+                "input": {
+                    "contentId": "Content-001",
+                    "action": "Approve"
+                },
+                "expected": {
+                    "outcome": "Content status updated to approved. Feedback sent if necessary.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Flag Inappropriate Content",
+                "description": "Ensure admin can flag content as inappropriate.",
+                "input": {
+                    "contentId": "Content-002",
+                    "action": "Flag"
+                },
+                "expected": {
+                    "outcome": "Content flagged as inappropriate, feedback sent to creator.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Content Moderation Failure due to Network Issue",
+                "description": "Ensure system notifies admin if a network error prevents moderation actions.",
+                "input": {
+                    "contentId": "Content-003",
+                    "action": "Delete",
+                    "error": "Network timeout"
+                },
+                "expected": {
+                    "outcome": "Error message displayed: 'Unable to perform moderation action due to network error. Please try again later.'",
+                    "status": "Failure"
+                }
+            },
+            {
+                "name": "Attempt to Moderate Nonexistent Content",
+                "description": "Ensure system handles cases where admin tries to moderate content that no longer exists.",
+                "input": {
+                    "contentId": "Content-999",
+                    "action": "Flag"
+                },
+                "expected": {
+                    "outcome": "Error message displayed: 'Content not found. It may have been deleted by the creator.'",
+                    "status": "Failure"
+                }
+            }
+        ]
+    },
+    {
+        "usecase": {
+            "name": "View Analytics",
+            "scenario": "Admin views analytics to monitor platform activity and trends.",
+            "actors": "Admin, System",
+            "preconditions": "Admin is logged in and analytics data is available.",
+            "steps": [
+                "Admin navigates to the analytics section.",
+                "System retrieves and displays analytics data, including user engagement and flagged content statistics.",
+                "Admin reviews the analytics data."
+            ]
+        },
+        "testcases": [
+            {
+                "name": "Successful Analytics Viewing",
+                "description": "Ensure admin can access and view analytics data.",
+                "input": {},
+                "expected": {
+                    "outcome": "Analytics data displayed, including user engagement metrics.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Analytics Data Not Available",
+                "description": "Ensure system notifies admin if analytics data is unavailable.",
+                "input": {},
+                "expected": {
+                    "outcome": "Error message displayed: 'Analytics data currently unavailable. Please try again later.'",
+                    "status": "Failure"
+                }
+            }
+        ]
+    },
+    {
+        "usecase": {
+            "name": "Filter Inappropriate Content (Auto)",
+            "scenario": "System automatically filters content for inappropriate material and flags it if necessary.",
+            "actors": "System",
+            "preconditions": "Content is uploaded to the platform, and the filtering algorithm is active.",
+            "steps": [
+                "Content is uploaded by a user.",
+                "System runs content through the automatic filter.",
+                "System determines if content meets community guidelines.",
+                "If content is flagged, system stores the flag status for further review."
+            ]
+        },
+        "testcases": [
+            {
+                "name": "Content Passes Automatic Filtering",
+                "description": "Ensure system allows appropriate content to pass without flagging.",
+                "input": {
+                    "contentId": "Content-010",
+                    "contentType": "Text",
+                    "content": "This is a community-friendly post."
+                },
+                "expected": {
+                    "outcome": "Content passes filter and is marked as safe.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Content Fails Automatic Filtering",
+                "description": "Ensure system flags inappropriate content automatically.",
+                "input": {
+                    "contentId": "Content-011",
+                    "contentType": "Image",
+                    "content": "Inappropriate image content"
+                },
+                "expected": {
+                    "outcome": "Content flagged as inappropriate.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "System Error During Filtering",
+                "description": "Ensure system handles errors during filtering process.",
+                "input": {
+                    "contentId": "Content-012",
+                    "contentType": "Video",
+                    "error": "Filtering algorithm failure"
+                },
+                "expected": {
+                    "outcome": "Error message displayed: 'Content filtering failed. Please try again later.'",
+                    "status": "Failure"
+                }
+            }
+        ]
+    },
+    {
+        "usecase": {
+            "name": "Report Content for Review",
+            "scenario": "System reports inappropriate content for admin review if flagged by the automatic filter.",
+            "actors": "System, Admin",
+            "preconditions": "Content has been flagged by the automatic filter for admin review.",
+            "steps": [
+                "System flags content as inappropriate.",
+                "System sends content to the admin dashboard for review."
+            ]
+        },
+        "testcases": [
+            {
+                "name": "Flagged Content Successfully Reported to Admin",
+                "description": "Ensure flagged content is sent to admin dashboard for review.",
+                "input": {
+                    "contentId": "Content-015"
+                },
+                "expected": {
+                    "outcome": "Content appears in admin dashboard for further review.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Failed to Report Content to Admin",
+                "description": "Ensure system notifies if content fails to be sent to admin dashboard.",
+                "input": {
+                    "contentId": "Content-016",
+                    "error": "Database error"
+                },
+                "expected": {
+                    "outcome": "Error message displayed: 'Unable to report content for review. Please try again later.'",
+                    "status": "Failure"
+                }
+            }
+        ]
+    },
+    {
+        "usecase": {
+            "name": "BUET-Centric Advanced Search",
+            "scenario": "User searches for people or companies associated with BUET based on specific criteria such as name, working field, and achievements.",
+            "actors": "Student, Faculty, Alumni",
+            "preconditions": "User is logged into CampusConnect.",
+            "steps": [
+                "User enters a search term related to name, working field, country, or company.",
+                "System retrieves records matching the search terms.",
+                "System displays results showing profiles or others with relevant details.",
+                "User clicks on a result for more information."
+            ]
+        },
+        "testcases": [
+            {
+                "name": "Search for Person by Name and Company",
+                "description": "Verify that a user can search for a person named 'Ifty' working at 'IQVIA' and view relevant profile.",
+                "input": {
+                    "searchQuery": {
+                        "name": "Ifty",
+                        "workingCompany": "IQVIA"
+                    }
+                },
+                "expected": {
+                    "outcome": "Profile of 'Ifty' working at 'IQVIA' with campus connection is displayed.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Search for Company and Location",
+                "description": "Ensure the system retrieves profiles of people working at Google in Dublin.",
+                "input": {
+                    "searchQuery": {
+                        "workingCompany": "Google",
+                        "workingCountry": "Dublin"
+                    }
+                },
+                "expected": {
+                    "outcome": "Profiles of individuals or posts from BUET working at Google in Dublin are displayed.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Search by Graduation Year",
+                "description": "Verify that the user can search for students who graduated from Penn State in 2017.",
+                "input": {
+                    "searchQuery": {
+                        "institution": "Penn State",
+                        "graduationYear": 2017
+                    }
+                },
+                "expected": {
+                    "outcome": "Profiles of graduates from 2017 are displayed.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Search by Working Country",
+                "description": "Ensure that the system retrieves profiles of BUET alumni based in Australia.",
+                "input": {
+                    "searchQuery": {
+                        "workingCountry": "Australia"
+                    }
+                },
+                "expected": {
+                    "outcome": "Profiles of BUET alumni or posts currently in Australia are displayed.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Search by Research Topic",
+                "description": "Verify that users can search for profiles involved in research on Artificial Intelligence.",
+                "input": {
+                    "searchQuery": {
+                        "researchField": "Artificial Intelligence"
+                    }
+                },
+                "expected": {
+                    "outcome": "Profiles of BUET students and faculty or posts researching AI are displayed.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Search by Achievement",
+                "description": "Ensure profiles of ICPC World Finalists from BUET are retrievable.",
+                "input": {
+                    "searchQuery": {
+                        "achievement": "ICPC World Finalist"
+                    }
+                },
+                "expected": {
+                    "outcome": "Profiles of BUET students who are ICPC World Finalists are displayed.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Search by Organization",
+                "description": "Verify retrieval of profiles from BUET affiliated with IEEE.",
+                "input": {
+                    "searchQuery": {
+                        "organization": "IEEE"
+                    }
+                },
+                "expected": {
+                    "outcome": "Profiles of IEEE members from BUET are displayed.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Search for Multiple Fields",
+                "description": "Search for BUET students in Civil, Mechanical, and Architecture fields.",
+                "input": {
+                    "searchQuery": {
+                        "fieldOfStudy": [
+                            "Civil Engineering",
+                            "Mechanical Engineering",
+                            "Architecture"
+                        ]
+                    }
+                },
+                "expected": {
+                    "outcome": "Profiles of BUET students in Civil, Mechanical, and Architecture fields are displayed.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "No Results Found",
+                "description": "Ensure that the system handles queries with no matching results gracefully.",
+                "input": {
+                    "searchQuery": {
+                        "name": "Nonexistent Person"
+                    }
+                },
+                "expected": {
+                    "outcome": "System displays 'No results found' message.",
+                    "status": "No Results"
+                }
+            },
+            {
+                "name": "Empty Search Query",
+                "description": "Verify system behavior for an empty search input across all fields.",
+                "input": {
+                    "searchQuery": {}
+                },
+                "expected": {
+                    "outcome": "System prompts user to enter search criteria or displays 'Please enter a search term'.",
+                    "status": "Failed"
+                }
+            }
+        ]
+    },
+    {
+        "usecase": {
+            "name": "Advanced Filter-Based Search",
+            "scenario": "User applies specific filters such as batch, department, roll number, or hall name to specify their search results within BUET profiles.",
+            "actors": "Student, Faculty, Alumni",
+            "preconditions": "User is logged into CampusConnect.",
+            "steps": [
+                "User selects filters from dropdown options, such as batch, department, roll number, or hall name.",
+                "System retrieves records that match the applied filters.",
+                "System displays results with profiles meeting all selected filter criteria.",
+                "User clicks on a filtered result to view detailed profile information."
+            ]
+        },
+        "testcases": [
+            {
+                "name": "Valid Filter by Batch and Department",
+                "description": "Verify that the system correctly filters profiles by batch and department, displaying relevant BUET students.",
+                "input": {
+                    "filters": {
+                        "batch": "2017",
+                        "department": "Computer Science and Engineering"
+                    }
+                },
+                "expected": {
+                    "outcome": "Profiles of students from batch 2017 in Computer Science and Engineering displayed.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Filter by Roll Number and Hall Name",
+                "description": "Ensure that a user can apply roll number and hall name filters to view specific profiles.",
+                "input": {
+                    "filters": {
+                        "rollNumber": "1705012",
+                        "hallName": "Ahsanullah Hall"
+                    }
+                },
+                "expected": {
+                    "outcome": "Profile of the student with roll number 1705012 in Ahsanullah Hall displayed.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Invalid Batch and Roll Number Combination",
+                "description": "Verify the system’s response when an invalid batch and roll number combination is provided.",
+                "input": {
+                    "filters": {
+                        "batch": "2019",
+                        "rollNumber": "1705012"
+                    }
+                },
+                "expected": {
+                    "outcome": "System displays 'No results found' as roll number 1705012 does not match batch 2019.",
+                    "status": "No Results"
+                }
+            },
+            {
+                "name": "Filter by Department Only",
+                "description": "Ensure that filtering by department alone returns relevant profiles.",
+                "input": {
+                    "filters": {
+                        "department": "Civil Engineering"
+                    }
+                },
+                "expected": {
+                    "outcome": "Profiles of BUET students in Civil Engineering displayed.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Filter with Nonexistent Hall Name",
+                "description": "Verify the system’s behavior when filtering with an invalid hall name.",
+                "input": {
+                    "filters": {
+                        "hallName": "Invalid Hall"
+                    }
+                },
+                "expected": {
+                    "outcome": "System displays 'No results found' as 'Invalid Hall' does not exist.",
+                    "status": "No Results"
+                }
+            },
+            {
+                "name": "Multiple Filter Criteria - Department and Hall",
+                "description": "Ensure that a combination of department and hall filters returns precise results.",
+                "input": {
+                    "filters": {
+                        "department": "Mechanical Engineering",
+                        "hallName": "Suhrawardy Hall"
+                    }
+                },
+                "expected": {
+                    "outcome": "Profiles of Mechanical Engineering students from Suhrawardy Hall are displayed.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Partial Filter Input - Batch Only",
+                "description": "Verify that the system handles partial filter input, such as batch only, correctly.",
+                "input": {
+                    "filters": {
+                        "batch": "2018"
+                    }
+                },
+                "expected": {
+                    "outcome": "Profiles of students from batch 2018 are displayed.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Empty Filter Input",
+                "description": "Ensure the system prompts the user if no filter criteria are provided.",
+                "input": {
+                    "filters": {}
+                },
+                "expected": {
+                    "outcome": "System prompts user to select at least one filter criterion.",
+                    "status": "Failed"
+                }
+            },
+            {
+                "name": "Filter with Special Characters in Roll Number",
+                "description": "Check system response to roll numbers containing special characters.",
+                "input": {
+                    "filters": {
+                        "rollNumber": "1705@12"
+                    }
+                },
+                "expected": {
+                    "outcome": "System displays 'Invalid input format' as special characters are not allowed in roll numbers.",
+                    "status": "Failed"
+                }
+            }
+        ]
+    },
+    {
+        "usecase": {
+            "name": "Review Job Applications",
+            "scenario": "Recruiter reviews applications received for a job posting and selects qualified candidates.",
+            "actors": "Recruiter, System",
+            "preconditions": "Recruiter has posted a job opening, and applicants have submitted their applications.",
+            "steps": [
+                "Recruiter navigates to the 'Job Applications' section.",
+                "System displays a list of all applicants for the job posting.",
+                "Recruiter reviews each applicant's profile and qualifications.",
+                "Recruiter selects applicants to move forward in the hiring process.",
+                "System updates the application status for the selected applicants.",
+                "System notifies the selected applicants about the next steps."
+            ]
+        },
+        "testcases": [
+            {
+                "name": "Successful Application Review",
+                "description": "Ensure that the recruiter can review and select qualified applicants for a job posting.",
+                "input": {
+                    "jobPostingId": "JP-001",
+                    "applicants": [
+                        {
+                            "applicantId": "A-001",
+                            "qualifications": [
+                                "Degree in Computer Science",
+                                "3 years of experience in web development"
+                            ],
+                            "status": "Pending"
+                        },
+                        {
+                            "applicantId": "A-002",
+                            "qualifications": [
+                                "Master's in Electrical Engineering",
+                                "5 years of experience in embedded systems"
+                            ],
+                            "status": "Pending"
+                        },
+                        {
+                            "applicantId": "A-003",
+                            "qualifications": [
+                                "Bachelor's in Mechanical Engineering"
+                            ],
+                            "status": "Pending"
+                        }
+                    ],
+                    "selectedApplicants": [
+                        "A-001",
+                        "A-002"
+                    ]
+                },
+                "expected": {
+                    "outcome": "Selected applicants (A-001 and A-002) have their status updated to 'Selected'. Notifications sent to them about the next steps.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "No Applicants for Job Posting",
+                "description": "Ensure the system handles cases where there are no applicants for a job posting.",
+                "input": {
+                    "jobPostingId": "JP-002",
+                    "applicants": []
+                },
+                "expected": {
+                    "outcome": "System displays a message: 'No applications received for this job posting.'",
+                    "status": "No Results"
+                }
+            },
+            {
+                "name": "Recruiter Fails to Update Application Status",
+                "description": "Ensure the system notifies the recruiter if there is a failure in updating the application status.",
+                "input": {
+                    "jobPostingId": "JP-003",
+                    "applicants": [
+                        {
+                            "applicantId": "A-004",
+                            "qualifications": [
+                                "Bachelor's in Computer Science"
+                            ],
+                            "status": "Pending"
+                        }
+                    ],
+                    "selectedApplicants": [
+                        "A-004"
+                    ],
+                    "error": "Database error"
+                },
+                "expected": {
+                    "outcome": "Error message displayed: 'Failed to update application status. Please try again later.'",
+                    "status": "Failure"
+                }
+            },
+            {
+                "name": "Recruiter Notifies Applicants About Next Steps",
+                "description": "Ensure the system sends notifications to the selected applicants about the next steps in the hiring process.",
+                "input": {
+                    "jobPostingId": "JP-004",
+                    "applicants": [
+                        {
+                            "applicantId": "A-005",
+                            "qualifications": [
+                                "Master's in Data Science",
+                                "2 years of experience in machine learning"
+                            ],
+                            "status": "Selected"
+                        }
+                    ]
+                },
+                "expected": {
+                    "outcome": "Notification sent to applicant A-005: 'Congratulations! You have been selected for the next stage of the hiring process. Please check your email for further instructions.'",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Notification Fails to Send to Selected Applicant",
+                "description": "Ensure the system handles cases where the notification to the selected applicant fails to be sent.",
+                "input": {
+                    "jobPostingId": "JP-005",
+                    "applicants": [
+                        {
+                            "applicantId": "A-006",
+                            "qualifications": [
+                                "Bachelor's in Electrical Engineering",
+                                "4 years of experience in IoT development"
+                            ],
+                            "status": "Selected"
+                        }
+                    ],
+                    "error": "Notification service unavailable"
+                },
+                "expected": {
+                    "outcome": "Error message displayed: 'Failed to notify the selected applicant. Please try again later.'",
+                    "status": "Failure"
+                }
+            }
+        ]
+    },
+    {
+        "usecase": {
+            "name": "Manage User Profiles",
+            "scenario": "Users can create, view, and update their profiles on the Campus Connect platform.",
+            "actors": "Student, Alumni, Faculty, Admin",
+            "preconditions": "User is logged in to the Campus Connect platform.",
+            "steps": [
+                "User accesses the 'Profile' section of the platform.",
+                "User can view their existing profile information.",
+                "User can edit and update their profile details, such as personal information, education, work experience, and skills.",
+                "User can upload a profile picture or avatar.",
+                "User can set their profile privacy settings (public or private).",
+                "System saves the updated profile information and applies the privacy settings."
+            ]
+        },
+        "testcases": [
+            {
+                "name": "Successful Profile Creation",
+                "description": "Ensure that a user can create a new profile with all required fields.",
+                "input": {
+                    "userId": "user001",
+                    "profileData": {
+                        "name": "John Doe",
+                        "email": "john.doe@example.com",
+                        "institution": "BUET",
+                        "degree": "Bachelor of Science",
+                        "department": "Computer Science and Engineering",
+                        "graduationYear": 2020,
+                        "workExperience": [
+                            {
+                                "company": "ABC Corp",
+                                "position": "Software Engineer",
+                                "startYear": 2020,
+                                "endYear": 2022
+                            }
+                        ],
+                        "skills": [
+                            "Python",
+                            "Java",
+                            "SQL"
+                        ],
+                        "profilePicture": "user001.jpg",
+                        "privacy": "public"
+                    }
+                },
+                "expected": {
+                    "outcome": "User profile created successfully with all provided information.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "View Own Profile",
+                "description": "Ensure that a user can view their own profile information.",
+                "input": {
+                    "userId": "user002"
+                },
+                "expected": {
+                    "outcome": "User can view their profile details, including personal information, education, work experience, and skills.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Update Profile Information",
+                "description": "Verify that a user can update their profile details.",
+                "input": {
+                    "userId": "user001",
+                    "updatedProfileData": {
+                        "name": "John Doe",
+                        "email": "john.doe@newexample.com",
+                        "workExperience": [
+                            {
+                                "company": "ABC Corp",
+                                "position": "Senior Software Engineer",
+                                "startYear": 2020,
+                                "endYear": 2023
+                            }
+                        ],
+                        "skills": [
+                            "Python",
+                            "Java",
+                            "SQL",
+                            "React"
+                        ],
+                        "profilePicture": "user001_updated.jpg"
+                    }
+                },
+                "expected": {
+                    "outcome": "User profile updated successfully with the new information.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Profile Picture Upload Failure",
+                "description": "Ensure the system handles cases where the user fails to upload a profile picture.",
+                "input": {
+                    "userId": "user003",
+                    "profilePicture": null,
+                    "error": "File upload error"
+                },
+                "expected": {
+                    "outcome": "Error message displayed: 'Failed to upload profile picture. Please try again.'",
+                    "status": "Failure"
+                }
+            },
+            {
+                "name": "Set Profile Privacy to Private",
+                "description": "Verify that a user can set their profile to private.",
+                "input": {
+                    "userId": "user001",
+                    "privacy": "private"
+                },
+                "expected": {
+                    "outcome": "User profile privacy set to 'private'. Only the user can view their full profile information.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "View Other User's Private Profile",
+                "description": "Ensure that a user cannot view another user's private profile.",
+                "input": {
+                    "userId": "user002",
+                    "viewedUserId": "user001",
+                    "privacy": "private"
+                },
+                "expected": {
+                    "outcome": "Limited profile information displayed. Full details not visible due to privacy settings.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Update Profile with Incomplete Information",
+                "description": "Verify that the system prevents users from updating their profile with missing required fields.",
+                "input": {
+                    "userId": "user004",
+                    "updatedProfileData": {
+                        "name": "",
+                        "email": "user004@example.com",
+                        "institution": "BUET"
+                    }
+                },
+                "expected": {
+                    "outcome": "Error message displayed: 'Please fill in all required fields.'",
+                    "status": "Failure"
+                }
+            },
+            {
+                "name": "Update Profile with Invalid Email",
+                "description": "Ensure the system validates the email format during profile updates.",
+                "input": {
+                    "userId": "user005",
+                    "updatedProfileData": {
+                        "name": "User Five",
+                        "email": "user005.example.com",
+                        "institution": "BUET"
+                    }
+                },
+                "expected": {
+                    "outcome": "Error message displayed: 'Please enter a valid email address.'",
+                    "status": "Failure"
+                }
+            },
+            {
+                "name": "Update Profile with Duplicate Email",
+                "description": "Verify that the system prevents users from updating their profile with an email already in use.",
+                "input": {
+                    "userId": "user006",
+                    "updatedProfileData": {
+                        "name": "User Six",
+                        "email": "john.doe@example.com",
+                        "institution": "BUET"
+                    }
+                },
+                "expected": {
+                    "outcome": "Error message displayed: 'The email address is already in use. Please choose a different email.'",
+                    "status": "Failure"
+                }
+            },
+            {
+                "name": "Update Profile with Special Characters in Name",
+                "description": "Ensure the system handles user profiles with special characters in the name field.",
+                "input": {
+                    "userId": "user007",
+                    "updatedProfileData": {
+                        "name": "John Doe123!@#",
+                        "email": "user007@example.com",
+                        "institution": "BUET"
+                    }
+                },
+                "expected": {
+                    "outcome": "Profile updated successfully, including the name with special characters.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Update Profile with Future Graduation Year",
+                "description": "Verify that the system prevents users from setting a graduation year in the future.",
+                "input": {
+                    "userId": "user008",
+                    "updatedProfileData": {
+                        "name": "User Eight",
+                        "email": "user008@example.com",
+                        "institution": "BUET",
+                        "degree": "Bachelor of Science",
+                        "department": "Electrical and Electronic Engineering",
+                        "graduationYear": 2025
+                    }
+                },
+                "expected": {
+                    "outcome": "Error message displayed: 'Graduation year cannot be in the future.'",
+                    "status": "Failure"
+                }
+            },
+            {
+                "name": "Update Profile with Overlapping Work Experience",
+                "description": "Ensure the system validates that the user's work experience does not have overlapping time periods.",
+                "input": {
+                    "userId": "user009",
+                    "updatedProfileData": {
+                        "name": "User Nine",
+                        "email": "user009@example.com",
+                        "workExperience": [
+                            {
+                                "company": "ABC Corp",
+                                "position": "Software Engineer",
+                                "startYear": 2020,
+                                "endYear": 2022
+                            },
+                            {
+                                "company": "XYZ Inc",
+                                "position": "Senior Software Engineer",
+                                "startYear": 2021,
+                                "endYear": 2023
+                            }
+                        ]
+                    }
+                },
+                "expected": {
+                    "outcome": "Error message displayed: 'Your work experience has overlapping time periods. Please check and update accordingly.'",
+                    "status": "Failure"
+                }
+            },
+            {
+                "name": "Update Profile with Empty Skills",
+                "description": "Verify that the system allows users to save their profile without any skills.",
+                "input": {
+                    "userId": "user010",
+                    "updatedProfileData": {
+                        "name": "User Ten",
+                        "email": "user010@example.com",
+                        "skills": []
+                    }
+                },
+                "expected": {
+                    "outcome": "Profile updated successfully, even with an empty skills list.",
+                    "status": "Success"
+                }
+            }
+        ]
+    },
+    {
+        "useCase": "Natural Language Text Search Conversion",
+        "scenario": "User types natural language queries, which the system converts into searchable queries using NLP models.",
+        "actors": [
+            "User",
+            "System"
+        ],
+        "preconditions": "The system has NLP models trained to parse natural language input and convert it into structured search queries.",
+        "steps": [
+            "User enters a natural language query in the search bar.",
+            "System processes the input using NLP models to identify keywords, entities, and context.",
+            "System converts the processed query into a structured search format compatible with the database.",
+            "System retrieves results based on the structured query and presents them to the user."
+        ],
+        "testCases": [
+            {
+                "name": "Simple Query Parsing",
+                "description": "Verify that the system can parse simple queries correctly.",
+                "input": {
+                    "query": "Find research papers on artificial intelligence"
+                },
+                "expected": {
+                    "outcome": "System retrieves relevant research papers related to artificial intelligence.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Complex Multi-Entity Query",
+                "description": "Test parsing of a query involving multiple entities and relations.",
+                "input": {
+                    "query": "Show me professors working on machine learning at BUET"
+                },
+                "expected": {
+                    "outcome": "System retrieves profiles of professors working on machine learning at BUET.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Ambiguous Term Handling",
+                "description": "Ensure system handles ambiguous terms by providing multiple interpretations or a fallback.",
+                "input": {
+                    "query": "Looking for resources on 'development' in tech"
+                },
+                "expected": {
+                    "outcome": "System displays either multiple options for 'development' or clarifies context.",
+                    "status": "Partial Success"
+                }
+            },
+            {
+                "name": "Handling Incomplete Query Phrases",
+                "description": "Ensure system manages incomplete or vague queries gracefully.",
+                "input": {
+                    "query": "Find students from"
+                },
+                "expected": {
+                    "outcome": "System prompts user to provide additional context or displays a clarification request.",
+                    "status": "Failure"
+                }
+            },
+            {
+                "name": "Long-Form Question Query",
+                "description": "Check system's ability to handle full-sentence questions.",
+                "input": {
+                    "query": "Can you show me all alumni who graduated in 2015 and are currently working in data science?"
+                },
+                "expected": {
+                    "outcome": "System retrieves profiles of alumni who graduated in 2015 and are in data science roles.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Misspelled Words in Query",
+                "description": "Verify the NLP model's ability to correct or interpret misspelled words.",
+                "input": {
+                    "query": "Looking for reserch papers on machine lerning"
+                },
+                "expected": {
+                    "outcome": "System interprets 'reserch' as 'research' and 'lerning' as 'learning', then retrieves relevant papers.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Unsupported Language",
+                "description": "Ensure system handles inputs in unsupported languages gracefully.",
+                "input": {
+                    "query": "Encontrar profesores que trabajan en inteligencia artificial"
+                },
+                "expected": {
+                    "outcome": "System displays an error message: 'Unsupported language. Please try again in English.'",
+                    "status": "Failure"
+                }
+            },
+            {
+                "name": "Excessive Use of Stop Words",
+                "description": "Test system's response to a query with too many irrelevant words.",
+                "input": {
+                    "query": "I am trying to find out if you could possibly show me the list of alumni working in engineering"
+                },
+                "expected": {
+                    "outcome": "System removes stop words, interprets intent, and retrieves alumni in engineering.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Edge Case: Extremely Long Query",
+                "description": "Ensure the system can handle and truncate very long queries appropriately.",
+                "input": {
+                    "query": "I'm looking for information about professors who have experience in multiple fields such as artificial intelligence, data science, machine learning, and possibly some expertise in deep learning, specifically those who are currently at institutions known for tech innovation like BUET or other prominent universities."
+                },
+                "expected": {
+                    "outcome": "System truncates excess length, parses key entities (professors, expertise, institutions), and returns matching profiles.",
+                    "status": "Success"
+                }
+            },
+            {
+                "name": "Query with No Valid Keywords",
+                "description": "Test system behavior with queries lacking searchable keywords.",
+                "input": {
+                    "query": "Show all the things please"
+                },
+                "expected": {
+                    "outcome": "System prompts user for a more specific query.",
+                    "status": "Failure"
+                }
+            },
+            {
+                "name": "Special Characters in Query",
+                "description": "Ensure system handles unexpected special characters in the query.",
+                "input": {
+                    "query": "Find @research! on #AI$"
+                },
+                "expected": {
+                    "outcome": "System ignores special characters and interprets keywords to find research on AI.",
+                    "status": "Success"
+                }
+            }
+        ]
+    }
+]
